@@ -6,7 +6,6 @@ export default class Settings extends JetView {
 			rows: [
 				{ view: "segmented", css: "backgorund-white", options: ["en", "ru"], inputWidth: 200, },
 				{ css: "backgorund-white", }
-
 			]
 		};
 	}
