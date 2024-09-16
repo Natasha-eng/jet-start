@@ -26,6 +26,7 @@
 .space {
   display: flex;
   justify-content: space-between;
+  height: inherit;
 }
 
 .space span {
@@ -85,6 +86,6 @@
   vertical-align: middle;
 }
 
-.white {
+.backgorund-white {
   background: white;
 }

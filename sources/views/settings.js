@@ -2,11 +2,12 @@ import { JetView } from "webix-jet";
 
 export default class Settings extends JetView {
 	config() {
-		return { 
+		return {
 			rows: [
-				{view:"segmented", options:["en", "ru"],  width: 200,},
-				{}
-			]			 
+				{ view: "segmented", css: "backgorund-white", options: ["en", "ru"], inputWidth: 200, },
+				{ css: "backgorund-white", }
+
+			]
 		};
 	}
 }
