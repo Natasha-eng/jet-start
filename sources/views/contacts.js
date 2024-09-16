@@ -11,7 +11,7 @@ export default class Contacts extends JetView {
 					margin: 10,
 					fillspace: true,
 					cols: [
-						{ view: "list", localId: "contactsList", scroll: false, select: true, template: "#Name# - #Email#", css: "webix_shadow_medium app_start" },
+						{ view: "list", localId: "contactsList", scrollX: false, select: true, template: "#Name# - #Email#", css: "webix_shadow_medium app_start" },
 						{
 							view: "form", margin: 20, elements: [
 								{ view: "text", label: "Name" },

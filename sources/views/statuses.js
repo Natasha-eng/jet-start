@@ -6,7 +6,7 @@ export default class StatusesView extends BaseTable {
         super(app, {
             tableLocalId: "statusesId",
             columns:[
-				{ id:"Name", header:"Statuses",editor: "text",fillspace: true,template: function (obj) {
+				{ id:"Name", header:"Statuses", editor: "text",fillspace: true,template: function (obj) {
 					return  (
                         "<div class='space'> <div>" + obj.Name + "</div> " +
                         "<span class='removeBtn webix_icon wxi-trash'></span></div>"

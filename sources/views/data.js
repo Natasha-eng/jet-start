@@ -8,7 +8,7 @@ export default class DataView extends JetView{
 		return { 
 			rows: [
 			{	cols: [
-					{view:"tabbar", id: "tabs", css:"webix_shadow_medium", multiview:true, value:"countriesView",						
+					{view:"tabbar", css:"webix_shadow_medium", multiview:true, value:"countriesView",						
 							  options: [
 								{ value:"Countries", id:"countriesView"},
             					{ value:"Statuses", id:"statusesView"},
