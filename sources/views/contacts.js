@@ -15,12 +15,11 @@ export default class Contacts extends JetView {
 					select: true,
 					template: "#Name# - #Email#",
 					css: "webix_shadow_medium app_start",
-					on: {
-						onAfterSelect: function (id) {
-							console.log('sselect', id)
-							this.$scope.setParam("id", id, true);
-
-						}
+					click:function (id) {				
+						this.$scope.setParam("id", id, true);
+						const selectedItem = this.getItem(id);
+						this.$scope.app.callEvent("onAfterSelect", [selectedItem]);
+						
 					}
 				},
 				FormView,
@@ -33,15 +32,17 @@ export default class Contacts extends JetView {
 		contactsList.parse(contacts);
 
 		let firstId = contactsList.getFirstId();
-		console.log('firstId', firstId)
 
 		if (contactsList.exists(firstId)) {
-			contactsList.select(firstId)
+			contactsList.select(firstId);
 			this.setParam("id", firstId, true);
-			const selectedItem = contactsList.getItem(firstId)
-			console.log('item', selectedItem)
-			this.app.callEvent("onSelectChange", [selectedItem]);
 		}
+	}
+
+	urlChange () {
+		const id = this.getParam("id");
+		const selectedItem = this.$$("contactsList").getItem(id);
+	    this.app.callEvent("onAfterSelect", [selectedItem]);
 	}
 
 }
