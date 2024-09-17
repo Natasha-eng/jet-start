@@ -1,5 +1,6 @@
 import { JetView } from "webix-jet";
 import { contacts } from "../models/contacts";
+import FormView from "./form";
 
 export default class Contacts extends JetView {
 	config() {
@@ -13,30 +14,34 @@ export default class Contacts extends JetView {
 					scrollX: false,
 					select: true,
 					template: "#Name# - #Email#",
-					css: "webix_shadow_medium app_start"
+					css: "webix_shadow_medium app_start",
+					on: {
+						onAfterSelect: function (id) {
+							console.log('sselect', id)
+							this.$scope.setParam("id", id, true);
+
+						}
+					}
 				},
-				{
-					view: "form",
-					margin: 20,
-					elements: [
-						{ view: "text", label: "Name" },
-						{ view: "text", type: "email", label: "Email" },
-						{ view: "text", type: "text", label: "Status" },
-						{ view: "text", type: "text", label: "Country" },
-						{
-							cols: [
-								{ view: "button", value: "Save", css: "webix_primary" },
-								{ view: "button", value: "Cancel" }
-							]
-						},
-						{}
-					], css: "webix_shadow_medium app_start"
-				},
+				FormView,
 			],
 		};
 	}
 
 	init() {
-		this.$$("contactsList").parse(contacts);
+		const contactsList = this.$$("contactsList");
+		contactsList.parse(contacts);
+
+		let firstId = contactsList.getFirstId();
+		console.log('firstId', firstId)
+
+		if (contactsList.exists(firstId)) {
+			contactsList.select(firstId)
+			this.setParam("id", firstId, true);
+			const selectedItem = contactsList.getItem(firstId)
+			console.log('item', selectedItem)
+			this.app.callEvent("onSelectChange", [selectedItem]);
+		}
 	}
+
 }
