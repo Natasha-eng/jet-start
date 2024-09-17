@@ -5,33 +5,37 @@ export default class Contacts extends JetView {
 	config() {
 
 		return {
-			rows: [
+			type: "wide",
+			cols: [
 				{
-					borderless: true,
-					margin: 10,
-					fillspace: true,
-					cols: [
-						{ view: "list", localId: "contactsList", scrollX: false, select: true, template: "#Name# - #Email#", css: "webix_shadow_medium app_start" },
+					view: "list",
+					localId: "contactsList",
+					scrollX: false,
+					select: true,
+					template: "#Name# - #Email#",
+					css: "webix_shadow_medium app_start"
+				},
+				{
+					view: "form",
+					margin: 20,
+					elements: [
+						{ view: "text", label: "Name" },
+						{ view: "text", type: "email", label: "Email" },
+						{ view: "text", type: "text", label: "Status" },
+						{ view: "text", type: "text", label: "Country" },
 						{
-							view: "form", margin: 20, elements: [
-								{ view: "text", label: "Name" },
-								{ view: "text", type: "password", label: "Email" },
-								{ view: "text", type: "password", label: "Status" },
-								{ view: "text", type: "password", label: "Country" },
-								{
-									cols: [
-										{ view: "button", value: "Save", css: "webix_primary" },
-										{ view: "button", value: "Cancel" }
-									]
-								},
-								{}
-							], css: "webix_shadow_medium app_start"
+							cols: [
+								{ view: "button", value: "Save", css: "webix_primary" },
+								{ view: "button", value: "Cancel" }
+							]
 						},
-					],
-				},				
+						{}
+					], css: "webix_shadow_medium app_start"
+				},
 			],
 		};
 	}
+
 	init() {
 		this.$$("contactsList").parse(contacts);
 	}

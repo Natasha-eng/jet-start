@@ -7,13 +7,14 @@ export default class BaseTable extends JetView {
     }
     config() {
         return {
+            type:"form",
             rows: [
                 {
                     view: "datatable",
-                    localId: this.grid_config.tableLocalId,
+                    localId: "table",
+                    height: 500,
                     columns: this.grid_config.columns,
                     select: true,
-                    autoConfig: true,
                     editable: true,
                     scrollX: false,
                     onClick: {
@@ -24,20 +25,16 @@ export default class BaseTable extends JetView {
                     }
                 },
                 {
-                    fillspace: true,
-                    css: "backgorund-white",
-                    rows: [
-                        {
-                            view: "button", localId: this.grid_config.buttonLocalId, value: this.grid_config.buttonValue, css: "webix_primary",
-                            inputWidth: 150, click: () => {
-                                const table = this.$$(this.grid_config.tableLocalId);
-                                table.add({ "Name": "" })
-                            }
-                        },
-
-                    ]
+                    view: "button",
+                    value: this.grid_config.buttonValue, 
+                    css: "webix_primary",
+                    inputWidth: 150,
+                    click: () => {
+                        this.$$("table").add({ "Name": "" })
+                    }
                 },
-                {css: "backgorund-white"}
+                {}
+                
             ]
         };
     }
