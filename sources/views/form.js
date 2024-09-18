@@ -50,7 +50,7 @@ export default class FormView extends JetView {
                             value: _("Cancel"),
                             click: function () {
                                 const form = this.$scope.getRoot();
-                                form.clear();
+                                this.$scope.app.callEvent("onCancel");
                                 webix.message("Confirmed");
                             },
                         }
@@ -62,14 +62,24 @@ export default class FormView extends JetView {
 
     }
 
-    urlChange() {
+    init() {
 
+    }
+
+    urlChange() {
         this.on(this.app, "onAfterSelect", (data) => {
             this.$$("contactForm").setValues(data);
+            this.$$("contactForm").formData = this.$$("contactForm").getValues();
         });
     }
 
     ready() {
+        const preDvata = this.$$("contactForm").formData;
+        this.on(this.app, "onCancel", () => {
+            if (this.$$("contactForm").formData) this.$$("contactForm").setValues(this.$$("contactForm").formData);
+        });
+
+
         this.on(this.app, "onItemClick", (data) => {
             if (data) this.$$("contactForm").setValues(data);
         });
