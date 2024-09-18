@@ -4,4 +4,4 @@ export const countries = new webix.DataCollection({
 		{ "id": 2, "Name": "Canada" },
 		{ "id": 3, "Name": "Italy" }
 	]
-}) 
+});

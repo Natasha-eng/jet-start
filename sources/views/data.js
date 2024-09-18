@@ -4,6 +4,7 @@ import CountriesView from "./countries";
 
 export default class DataView extends JetView {
 	config() {
+		const _ = this.app.getService("locale")._;
 
 		return {
 			rows: [
@@ -15,8 +16,8 @@ export default class DataView extends JetView {
 							multiview: true,
 							value: "countriesView",
 							options: [
-								{ value: "Countries", id: "countriesView" },
-								{ value: "Statuses", id: "statusesView" },
+								{ value: _("Countries"), id: "countriesView" },
+								{ value: _("Statuses"), id: "statusesView" },
 							]
 						},
 					]

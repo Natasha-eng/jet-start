@@ -4,23 +4,57 @@ import FormView from "./form";
 
 export default class Contacts extends JetView {
 	config() {
-
+		const _ = this.app.getService("locale")._;
 		return {
 			type: "wide",
 			cols: [
 				{
-					view: "list",
-					localId: "contactsList",
-					scrollX: false,
-					select: true,
-					template: "#Name# - #Email#",
-					css: "webix_shadow_medium app_start",
-					click:function (id) {				
-						this.$scope.setParam("id", id, true);
-						const selectedItem = this.getItem(id);
-						this.$scope.app.callEvent("onAfterSelect", [selectedItem]);
-						
-					}
+					type: "form",
+					rows: [
+						{
+							view: "list",
+							localId: "contactsList",
+							scrollX: false,
+							select: true,
+							height: 300,
+							template: function (obj) {
+
+								return (
+									"<div class='space'> <div>" + obj.Name + "  " + obj.Email + "</div> " +
+									"<span class='removeBtn webix_icon wxi-trash'></span></div>"
+								);
+							},
+							css: "webix_shadow_medium app_start",
+							click: function (id) {
+								this.$scope.setParam("id", id, true);
+								const selectedItem = this.getItem(id);
+								this.$scope.app.callEvent("onAfterSelect", [selectedItem]);
+							},
+							onClick: {
+								removeBtn: function (ev, id) {
+									this.remove(id);
+									return false;
+								},
+							}
+						},
+						{
+							view: "button",
+							value: _("Add new contact"),
+							css: "webix_primary",
+							inputWidth: 250,
+							click: (id) => {
+
+								const newContact = {
+									"Name": "",
+									"Email": "",
+									"Status": 0,
+									"Country": 0
+								};
+								this.app.callEvent("onItemClick", [newContact]);
+							}
+						},
+						{}
+					]
 				},
 				FormView,
 			],
@@ -39,10 +73,26 @@ export default class Contacts extends JetView {
 		}
 	}
 
-	urlChange () {
+	urlChange() {
 		const id = this.getParam("id");
 		const selectedItem = this.$$("contactsList").getItem(id);
-	    this.app.callEvent("onAfterSelect", [selectedItem]);
+		this.app.callEvent("onAfterSelect", [selectedItem]);
 	}
 
+	ready() {
+		const contactsList = this.$$("contactsList");
+
+		this.on(this.app, "onDataEditStop", (data) => {
+			contactsList.updateItem(data.id, data);
+		});
+
+
+		this.on(this.app, "onItemClick", (data) => {
+			if (data) contactsList.add(data);
+			const lastId = contactsList.getLastId();
+			contactsList.select(lastId);
+
+			this.setParam("id", lastId, true);
+		});
+	}
 }

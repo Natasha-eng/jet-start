@@ -6,6 +6,7 @@ export default class BaseTable extends JetView {
         this.grid_config = config;
     }
     config() {
+        const _ = this.app.getService("locale")._;
         return {
             type:"form",
             rows: [
@@ -26,11 +27,11 @@ export default class BaseTable extends JetView {
                 },
                 {
                     view: "button",
-                    value: this.grid_config.buttonValue, 
+                    value: _(this.grid_config.buttonValue), 
                     css: "webix_primary",
-                    inputWidth: 150,
+                    inputWidth: 200,
                     click: () => {
-                        this.$$("table").add({ "Name": "" })
+                        this.$$("table").add({ "Name": "" });
                     }
                 },
                 {}
