@@ -42,7 +42,7 @@ export default class Contacts extends JetView {
 							value: _("Add new contact"),
 							css: "webix_primary",
 							inputWidth: 250,
-							click: (id) => {
+							click: () => {
 
 								const newContact = {
 									"Name": "",
@@ -77,26 +77,20 @@ export default class Contacts extends JetView {
 		const id = this.getParam("id");
 		const selectedItem = this.$$("contactsList").getItem(id);
 		this.app.callEvent("onAfterSelect", [selectedItem]);
-
 	}
 
 	ready() {
 		const contactsList = this.$$("contactsList");
 
 		this.on(this.app, "onDataEditStop", (data) => {
-			console.log('ready update list save', data)
-			console.log('ready update list id save', data.id)
 			contactsList.updateItem(data.id, data);
 		});
 
-
 		this.on(this.app, "onItemClick", (data) => {
-			console.log('ready', data)
 			if (data) contactsList.add(data);
 			const lastId = contactsList.getLastId();
 			contactsList.select(lastId);
 			this.setParam("id", lastId, true);
-			console.log('ad new', contactsList)
 		});
 	}
 }

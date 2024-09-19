@@ -1,6 +1,7 @@
 import { JetView } from "webix-jet";
 import { statuses } from "../models/statuses";
 import { countries } from "../models/countries";
+import PopupView from "./windows/popup";
 
 export default class FormView extends JetView {
     config() {
@@ -10,8 +11,18 @@ export default class FormView extends JetView {
             localId: "contactForm",
             margin: 20,
             elements: [
-                { view: "text", type: "text", label: "Name", name: "Name" },
-                { view: "text", type: "email", label: "Email", name: "Email" },
+                {
+                    view: "text",
+                    type: "text",
+                    label: "Name",
+                    name: "Name"
+                },
+                {
+                    view: "text",
+                    type: "email",
+                    label: "Email",
+                    name: "Email"
+                },
                 {
                     view: "combo",
                     label: "Status",
@@ -49,9 +60,10 @@ export default class FormView extends JetView {
                             view: "button",
                             value: _("Cancel"),
                             click: function () {
-                                const form = this.$scope.getRoot();
-                                this.$scope.app.callEvent("onCancel");
-                                webix.message("Confirmed");
+                                this.$scope._jetPopup.showWindow()
+
+                                // this.$scope.app.callEvent("onCancel");
+                                // webix.message("Confirmed");
                             },
                         }
                     ]
@@ -63,25 +75,29 @@ export default class FormView extends JetView {
     }
 
     init() {
-
+        this._jetPopup = this.ui(PopupView);
     }
 
     urlChange() {
+        const form = this.$$("contactForm");
+
         this.on(this.app, "onAfterSelect", (data) => {
-            this.$$("contactForm").setValues(data);
-            this.$$("contactForm").formData = this.$$("contactForm").getValues();
+            form.setValues(data);
+            form.prevData = form.getValues();
         });
     }
 
     ready() {
-        const preDvata = this.$$("contactForm").formData;
+        const form = this.$$("contactForm");
+
         this.on(this.app, "onCancel", () => {
-            if (this.$$("contactForm").formData) this.$$("contactForm").setValues(this.$$("contactForm").formData);
+            const preDvata = form.prevData;
+            if (preDvata) form.setValues(preDvata);
         });
 
 
         this.on(this.app, "onItemClick", (data) => {
-            if (data) this.$$("contactForm").setValues(data);
+            if (data) form.setValues(data);
         });
     }
 } 
