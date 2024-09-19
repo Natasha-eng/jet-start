@@ -53,7 +53,8 @@ export default class FormView extends JetView {
                             css: "webix_primary",
                             click: function () {
                                 const formData = this.$scope.getRoot().getValues();
-                                this.$scope.app.callEvent("onDataEditStop", [formData]);
+                                this.$scope.app.callEvent("onSave", [formData]);
+                                this.$scope.getRoot().prevData = formData;
                             }
                         },
                         {
@@ -61,9 +62,6 @@ export default class FormView extends JetView {
                             value: _("Cancel"),
                             click: function () {
                                 this.$scope._jetPopup.showWindow()
-
-                                // this.$scope.app.callEvent("onCancel");
-                                // webix.message("Confirmed");
                             },
                         }
                     ]
@@ -96,7 +94,7 @@ export default class FormView extends JetView {
         });
 
 
-        this.on(this.app, "onItemClick", (data) => {
+        this.on(this.app, "onConatactAdd", (data) => {
             if (data) form.setValues(data);
         });
     }

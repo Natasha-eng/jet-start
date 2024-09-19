@@ -50,7 +50,7 @@ export default class Contacts extends JetView {
 									"Status": 1,
 									"Country": 1
 								};
-								this.app.callEvent("onItemClick", [newContact]);
+								this.app.callEvent("onConatactAdd", [newContact]);
 							}
 						},
 						{}
@@ -82,11 +82,11 @@ export default class Contacts extends JetView {
 	ready() {
 		const contactsList = this.$$("contactsList");
 
-		this.on(this.app, "onDataEditStop", (data) => {
+		this.on(this.app, "onSave", (data) => {
 			contactsList.updateItem(data.id, data);
 		});
 
-		this.on(this.app, "onItemClick", (data) => {
+		this.on(this.app, "onConatactAdd", (data) => {
 			if (data) contactsList.add(data);
 			const lastId = contactsList.getLastId();
 			contactsList.select(lastId);
