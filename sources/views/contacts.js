@@ -7,6 +7,7 @@ export default class Contacts extends JetView {
 		const _ = this.app.getService("locale")._;
 		return {
 			type: "wide",
+			localId: "contacts",
 			cols: [
 				{
 					type: "form",
@@ -16,7 +17,6 @@ export default class Contacts extends JetView {
 							localId: "contactsList",
 							scrollX: false,
 							select: true,
-							height: 300,
 							template: function (obj) {
 
 								return (
@@ -27,12 +27,20 @@ export default class Contacts extends JetView {
 							css: "webix_shadow_medium app_start",
 							click: function (id) {
 								this.$scope.setParam("id", id, true);
-								const selectedItem = this.getItem(id);
-								this.$scope.app.callEvent("onAfterSelect", [selectedItem]);
 							},
 							onClick: {
 								removeBtn: function (ev, id) {
-									this.remove(id);
+									contacts.remove(id);
+
+									const contactsList = this.$scope;
+									let firstId = this.getFirstId();
+
+									if (firstId) {
+										this.select(firstId);
+										contactsList.setParam("id", firstId, true);
+									} else {
+										contactsList.setParam("id", null, true);
+									}
 									return false;
 								},
 							}
@@ -50,10 +58,11 @@ export default class Contacts extends JetView {
 									"Status": 1,
 									"Country": 1
 								};
-								this.app.callEvent("onConatactAdd", [newContact]);
+
+								contacts.add(newContact);
+								this.app.callEvent("onContactAdd", [newContact]);
 							}
 						},
-						{}
 					]
 				},
 				FormView,
@@ -65,30 +74,24 @@ export default class Contacts extends JetView {
 		const contactsList = this.$$("contactsList");
 		contactsList.parse(contacts);
 
-		let firstId = contactsList.getFirstId();
+		let firstId = contacts.getFirstId();
 
-		if (contactsList.exists(firstId)) {
+		if (contacts.exists(firstId)) {
 			contactsList.select(firstId);
 			this.setParam("id", firstId, true);
 		}
 	}
 
-	urlChange() {
-		const id = this.getParam("id");
-		const selectedItem = this.$$("contactsList").getItem(id);
-		this.app.callEvent("onAfterSelect", [selectedItem]);
-	}
-
 	ready() {
+
 		const contactsList = this.$$("contactsList");
+		// this.on(this.app, "onAfterSelect", (selectedItem) => {
+		// 	this.webix.storage.local.put("state", selectedItem);
+		// 	console.log('code 1', selectedItem)
+		// });
 
-		this.on(this.app, "onSave", (data) => {
-			contactsList.updateItem(data.id, data);
-		});
-
-		this.on(this.app, "onConatactAdd", (data) => {
-			if (data) contactsList.add(data);
-			const lastId = contactsList.getLastId();
+		this.on(this.app, "onContactAdd", (data) => {
+			const lastId = contacts.getLastId();
 			contactsList.select(lastId);
 			this.setParam("id", lastId, true);
 		});

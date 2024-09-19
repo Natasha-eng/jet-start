@@ -4,6 +4,7 @@ import BaseTable from "./baseTable";
 export default class CountriesView extends BaseTable {
   constructor(app) {
     super(app, {
+      collection: countries,
       columns: [
         {
           id: "Name",

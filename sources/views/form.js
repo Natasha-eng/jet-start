@@ -2,6 +2,7 @@ import { JetView } from "webix-jet";
 import { statuses } from "../models/statuses";
 import { countries } from "../models/countries";
 import PopupView from "./windows/popup";
+import { contacts } from "../models/contacts";
 
 export default class FormView extends JetView {
     config() {
@@ -51,17 +52,17 @@ export default class FormView extends JetView {
                             view: "button",
                             value: _("Save"),
                             css: "webix_primary",
-                            click: function () {
-                                const formData = this.$scope.getRoot().getValues();
-                                this.$scope.app.callEvent("onSave", [formData]);
-                                this.$scope.getRoot().prevData = formData;
+                            click: () => {
+                                const formData = this.getRoot().getValues();
+                                contacts.updateItem(formData.id, formData)
+                                this.getRoot().prevData = formData;
                             }
                         },
                         {
                             view: "button",
                             value: _("Cancel"),
-                            click: function () {
-                                this.$scope._jetPopup.showWindow()
+                            click: () => {
+                                this._jetPopup.showWindow()
                             },
                         }
                     ]
@@ -76,13 +77,17 @@ export default class FormView extends JetView {
         this._jetPopup = this.ui(PopupView);
     }
 
-    urlChange() {
+    urlChange(view, url) {
         const form = this.$$("contactForm");
+        const id = url[0].params.id;
 
-        this.on(this.app, "onAfterSelect", (data) => {
-            form.setValues(data);
+        if (id) {
+            const contact = contacts.getItem(id);
+            form.setValues(contact);
             form.prevData = form.getValues();
-        });
+        } else {
+            form.clear();
+        }
     }
 
     ready() {
@@ -92,10 +97,5 @@ export default class FormView extends JetView {
             const preDvata = form.prevData;
             if (preDvata) form.setValues(preDvata);
         });
-
-
-        this.on(this.app, "onConatactAdd", (data) => {
-            if (data) form.setValues(data);
-        });
     }
-} 
+}

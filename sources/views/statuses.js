@@ -4,7 +4,7 @@ import BaseTable from "./baseTable";
 export default class StatusesView extends BaseTable {
     constructor(app) {
         super(app, {
-
+            collection: statuses,
             columns: [
                 {
                     id: "Name",
