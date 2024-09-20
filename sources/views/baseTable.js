@@ -19,8 +19,8 @@ export default class BaseTable extends JetView {
                     editable: true,
                     scrollX: false,
                     onClick: {
-                        removeBtn: function (ev, id) {
-                            this.remove(id);
+                        removeBtn: (ev, id) => {
+                            this.grid_config.collection.remove(id);
                             return false;
                         },
                     }

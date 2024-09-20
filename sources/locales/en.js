@@ -9,7 +9,9 @@ const words = {
 	"Add new status": "Add new status",
 	"Add new contact": "Add new contact",
 	"Save": "Save",
-	"Cancel": "Cancel"
+	"Cancel": "Cancel",
+	"Reset the form ?": "Reset the form ?",
+	"Reset": "Reset"
 };
 
 export default words;

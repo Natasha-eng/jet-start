@@ -86,11 +86,6 @@
   vertical-align: middle;
 }
 
-.webix_icon.wxi-trash {
-  padding: 10px;
-}
-
 .webix_icon.wxi-trash:hover {
-  background: #1CA1C1;
-  color: white;
+  color: #1CA1C1;
 }

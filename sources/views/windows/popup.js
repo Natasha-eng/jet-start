@@ -1,10 +1,13 @@
 import { JetView } from "webix-jet";
 
 export default class PopupView extends JetView {
+
     config() {
+        const _ = this.app.getService("locale")._;
+
         return {
             view: "window",
-            head: "Reset the form ?",
+            head: _("Reset the form ?"),
             modal: true,
             width: 300,
             height: 400,
@@ -13,7 +16,7 @@ export default class PopupView extends JetView {
                 cols: [
                     {
                         view: "button",
-                        label: "Cancel",
+                        label: _("Cancel"),
                         width: 100, click: () => {
                             this.hideWindow();
                         }
@@ -21,7 +24,7 @@ export default class PopupView extends JetView {
                     {
                         view: "button",
                         css: "webix_primary",
-                        label: "Reset",
+                        label: _("Reset"),
                         width: 100, click: () => {
                             this.app.callEvent("onCancel");
                             this.hideWindow();

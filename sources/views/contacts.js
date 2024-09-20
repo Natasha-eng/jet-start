@@ -25,21 +25,19 @@ export default class Contacts extends JetView {
 								);
 							},
 							css: "webix_shadow_medium app_start",
-							click: function (id) {
-								this.$scope.setParam("id", id, true);
+							click: (id) => {
+								this.setParam("id", id, true);
 							},
 							onClick: {
 								removeBtn: function (ev, id) {
 									contacts.remove(id);
 
-									const contactsList = this.$scope;
 									let firstId = this.getFirstId();
 
 									if (firstId) {
-										this.select(firstId);
-										contactsList.setParam("id", firstId, true);
+										contacts.callEvent("onStoreUpdated", [firstId]);
 									} else {
-										contactsList.setParam("id", null, true);
+										contacts.callEvent("onStoreUpdated", [null]);
 									}
 									return false;
 								},
@@ -60,7 +58,7 @@ export default class Contacts extends JetView {
 								};
 
 								contacts.add(newContact);
-								this.app.callEvent("onContactAdd", [newContact]);
+								contacts.callEvent("onStoreUpdated", [newContact.id]);
 							}
 						},
 					]
@@ -74,26 +72,41 @@ export default class Contacts extends JetView {
 		const contactsList = this.$$("contactsList");
 		contactsList.parse(contacts);
 
-		let firstId = contacts.getFirstId();
+		this.on(contactsList, "onSelectChange", (id) => {
+			if (!id[0]) {
+				this.setParam("id", null, true);
+			} else {
+				this.setParam("id", id[0], true);
+			}
 
-		if (contacts.exists(firstId)) {
+		});
+
+		const firstId = contacts.getFirstId();
+
+		if (firstId) {
 			contactsList.select(firstId);
-			this.setParam("id", firstId, true);
 		}
 	}
 
 	ready() {
-
 		const contactsList = this.$$("contactsList");
+
+		// const contactsList = this.$$("contactsList");
 		// this.on(this.app, "onAfterSelect", (selectedItem) => {
 		// 	this.webix.storage.local.put("state", selectedItem);
-		// 	console.log('code 1', selectedItem)
+		// 	console.log('code', selectedItem)
 		// });
 
-		this.on(this.app, "onContactAdd", (data) => {
-			const lastId = contacts.getLastId();
-			contactsList.select(lastId);
-			this.setParam("id", lastId, true);
+		this.on(contactsList, "onSelectChange", (id) => {
+			if (!id[0]) {
+				this.setParam("id", null, true);
+			} else {
+				this.setParam("id", id[0], true);
+			}
+		});
+
+		this.on(contacts, "onStoreUpdated", (id) => {
+			contactsList.select(id);
 		});
 	}
 }

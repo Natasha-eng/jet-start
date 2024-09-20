@@ -53,16 +53,32 @@ export default class FormView extends JetView {
                             value: _("Save"),
                             css: "webix_primary",
                             click: () => {
-                                const formData = this.getRoot().getValues();
-                                contacts.updateItem(formData.id, formData)
-                                this.getRoot().prevData = formData;
+                                const form = this.getRoot();
+                                const formData = form.getValues();
+                                if (!formData.id) {
+                                    this.webix.message("Can not save the contact. Add the new one.")
+                                    return
+                                } else if (form.isDirty()) {
+                                    form.setDirty();
+                                    contacts.updateItem(formData.id, formData)
+                                    this.webix.message("Contact is updated.")
+                                } else {
+                                    this.webix.message("Contact hasn't been changed.");
+                                    return
+                                }
                             }
                         },
                         {
                             view: "button",
                             value: _("Cancel"),
                             click: () => {
-                                this._jetPopup.showWindow()
+                                const form = this.getRoot();
+                                if (form.isDirty()) {
+                                    this._jetPopup.showWindow()
+                                } else {
+                                    this.webix.message("The form has not been changed. Nothing to reset.")
+                                }
+
                             },
                         }
                     ]
@@ -84,7 +100,6 @@ export default class FormView extends JetView {
         if (id) {
             const contact = contacts.getItem(id);
             form.setValues(contact);
-            form.prevData = form.getValues();
         } else {
             form.clear();
         }
@@ -94,8 +109,12 @@ export default class FormView extends JetView {
         const form = this.$$("contactForm");
 
         this.on(this.app, "onCancel", () => {
-            const preDvata = form.prevData;
-            if (preDvata) form.setValues(preDvata);
+            if (form.isDirty()) {
+                const prevData = form.getCleanValues();
+                if (prevData) form.setValues(prevData);
+            } else {
+
+            }
         });
     }
 }
