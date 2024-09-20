@@ -95,15 +95,7 @@ export default class Contacts extends JetView {
 		// this.on(this.app, "onAfterSelect", (selectedItem) => {
 		// 	this.webix.storage.local.put("state", selectedItem);
 		// 	console.log('code', selectedItem)
-		// });
-
-		this.on(contactsList, "onSelectChange", (id) => {
-			if (!id[0]) {
-				this.setParam("id", null, true);
-			} else {
-				this.setParam("id", id[0], true);
-			}
-		});
+		// }); 
 
 		this.on(contacts, "onStoreUpdated", (id) => {
 			contactsList.select(id);
