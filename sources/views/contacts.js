@@ -25,20 +25,10 @@ export default class Contacts extends JetView {
 								);
 							},
 							css: "webix_shadow_medium app_start",
-							click: (id) => {
-								this.setParam("id", id, true);
-							},
+		
 							onClick: {
 								removeBtn: function (ev, id) {
 									contacts.remove(id);
-
-									let firstId = this.getFirstId();
-
-									if (firstId) {
-										contacts.callEvent("onStoreUpdated", [firstId]);
-									} else {
-										contacts.callEvent("onStoreUpdated", [null]);
-									}
 									return false;
 								},
 							}
@@ -58,7 +48,6 @@ export default class Contacts extends JetView {
 								};
 
 								contacts.add(newContact);
-								contacts.callEvent("onStoreUpdated", [newContact.id]);
 							}
 						},
 					]
@@ -71,6 +60,7 @@ export default class Contacts extends JetView {
 	init() {
 		const contactsList = this.$$("contactsList");
 		contactsList.parse(contacts);
+		const firstId = contacts.getFirstId();
 
 		this.on(contactsList, "onSelectChange", (id) => {
 			if (!id[0]) {
@@ -78,10 +68,7 @@ export default class Contacts extends JetView {
 			} else {
 				this.setParam("id", id[0], true);
 			}
-
 		});
-
-		const firstId = contacts.getFirstId();
 
 		if (firstId) {
 			contactsList.select(firstId);
@@ -90,15 +77,22 @@ export default class Contacts extends JetView {
 
 	ready() {
 		const contactsList = this.$$("contactsList");
-
 		// const contactsList = this.$$("contactsList");
 		// this.on(this.app, "onAfterSelect", (selectedItem) => {
 		// 	this.webix.storage.local.put("state", selectedItem);
 		// 	console.log('code', selectedItem)
 		// }); 
 
-		this.on(contacts, "onStoreUpdated", (id) => {
-			contactsList.select(id);
+
+		this.on(contacts.data, "onStoreUpdated", (id, obj, mode) => {
+			const firstId = contactsList.getFirstId();
+
+			if (mode === "add") {
+				contactsList.select(id);
+			}
+			if (mode === "delete") {
+				contactsList.select(firstId);
+			}
 		});
 	}
 }

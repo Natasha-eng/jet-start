@@ -109,12 +109,8 @@ export default class FormView extends JetView {
         const form = this.$$("contactForm");
 
         this.on(this.app, "onCancel", () => {
-            if (form.isDirty()) {
-                const prevData = form.getCleanValues();
-                if (prevData) form.setValues(prevData);
-            } else {
-
-            }
+            const prevData = form.getCleanValues();
+            form.setValues(prevData);
         });
     }
 }
