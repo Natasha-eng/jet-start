@@ -48,8 +48,10 @@ export default class Contacts extends JetView {
 									"Status": 1,
 									"Country": 1
 								};
+								contacts.waitSave(() => {
+									contacts.add(newContact);
 
-								contacts.add(newContact);
+								});
 							}
 						},
 					]
@@ -73,19 +75,22 @@ export default class Contacts extends JetView {
 		});
 
 		contacts.attachEvent("onAfterLoad", () => {
-			const firstId = contacts.getFirstId()
+			const firstId = contacts.getFirstId();
 			// || webix.storage.local.get("selectedId");
 			if (firstId)
 				contactsList.select(firstId);
 		});
 
-		this.on(contacts, "onStoreUpdated", (id, obj, mode) => {
-			if (mode === "add") {
-				contactsList.select(id);
-			} else if (mode === "delete") {
+		var contactsdDp = webix.dp(contacts);
+
+		contactsdDp.attachEvent("onAfterSave", function(response){
+			if (response.id) {
+				contactsList.select(response.id);
+			} else {
 				const firstId = contactsList.getFirstId();
 				contactsList.select(firstId);
 			}
 		});
+	
 	}
 }
