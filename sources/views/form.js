@@ -56,15 +56,13 @@ export default class FormView extends JetView {
                                 const form = this.getRoot();
                                 const formData = form.getValues();
                                 if (!formData.id) {
-                                    this.webix.message("Can not save the contact. Add the new one.")
-                                    return
+                                    webix.message("Can not save the contact. Add the new one.")
                                 } else if (form.isDirty()) {
                                     form.setDirty();
                                     contacts.updateItem(formData.id, formData)
-                                    this.webix.message("Contact is updated.")
+                                    webix.message("Contact is updated.")
                                 } else {
-                                    this.webix.message("Contact hasn't been changed.");
-                                    return
+                                    webix.message("Contact hasn't been changed.");
                                 }
                             }
                         },
@@ -76,7 +74,7 @@ export default class FormView extends JetView {
                                 if (form.isDirty()) {
                                     this._jetPopup.showWindow()
                                 } else {
-                                    this.webix.message("The form has not been changed. Nothing to reset.")
+                                    webix.message("The form has not been changed. Nothing to reset.")
                                 }
 
                             },
