@@ -81,8 +81,7 @@ export default class Contacts extends JetView {
 
 			if (mode === "add") {
 				contactsList.select(id);
-			}
-			if (mode === "delete") {
+			} else if (mode === "delete") {
 				const firstId = contactsList.getFirstId();
 				contactsList.select(firstId);
 			}
