@@ -85,3 +85,7 @@
   font-size: 20px;
   vertical-align: middle;
 }
+
+.webix_icon.wxi-trash:hover {
+  color: #1CA1C1;
+}

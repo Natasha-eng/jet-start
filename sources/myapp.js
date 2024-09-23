@@ -1,5 +1,5 @@
 import "./styles/app.css";
-import {JetApp, EmptyRouter, HashRouter, plugins } from "webix-jet";
+import { JetApp, EmptyRouter, HashRouter, plugins } from "webix-jet";
 
 // dynamic import of views
 const modules = import.meta.glob("./views/**/*.js");
@@ -9,14 +9,14 @@ const views = name => modules[`./views/${name}.js`]().then(x => x.default);
 const locales = import.meta.glob("./locales/*.js");
 const words = name => locales[`./locales/${name}.js`]().then(x => x.default);
 
-export default class MyApp extends JetApp{
-	constructor(config){
+export default class MyApp extends JetApp {
+	constructor(config) {
 		const defaults = {
-			id 		: import.meta.env.VITE_APPNAME,
-			version : import.meta.env.VITE_VERSION,
-			router 	: import.meta.env.VITE_BUILD_AS_MODULE ? EmptyRouter : HashRouter,
-			debug 	: !import.meta.env.PROD,
-			start 	: "/top/contacts",
+			id: import.meta.env.VITE_APPNAME,
+			version: import.meta.env.VITE_VERSION,
+			router: import.meta.env.VITE_BUILD_AS_MODULE ? EmptyRouter : HashRouter,
+			debug: !import.meta.env.PROD,
+			start: "/top/contacts",
 			// set custom view loader, mandatory
 			views
 		};
@@ -31,6 +31,6 @@ export default class MyApp extends JetApp{
 	}
 }
 
-if (!import.meta.env.VITE_BUILD_AS_MODULE){
-	webix.ready(() => new MyApp().render() );
+if (!import.meta.env.VITE_BUILD_AS_MODULE) {
+	webix.ready(() => new MyApp().render());
 }

@@ -6,8 +6,9 @@ export default class BaseTable extends JetView {
         this.grid_config = config;
     }
     config() {
+        const _ = this.app.getService("locale")._;
         return {
-            type:"form",
+            type: "form",
             rows: [
                 {
                     view: "datatable",
@@ -18,23 +19,23 @@ export default class BaseTable extends JetView {
                     editable: true,
                     scrollX: false,
                     onClick: {
-                        removeBtn: function (ev, id) {
-                            this.remove(id);
+                        removeBtn: (ev, id) => {
+                            this.grid_config.collection.remove(id);
                             return false;
                         },
                     }
                 },
                 {
                     view: "button",
-                    value: this.grid_config.buttonValue, 
+                    value: _(this.grid_config.buttonValue),
                     css: "webix_primary",
-                    inputWidth: 150,
+                    inputWidth: 200,
                     click: () => {
-                        this.$$("table").add({ "Name": "" })
+                        this.grid_config.collection.add({ "Name": "" });
                     }
                 },
                 {}
-                
+
             ]
         };
     }
