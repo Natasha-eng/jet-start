@@ -1,6 +1,7 @@
 import { JetView } from "webix-jet";
 import { contacts } from "../models/contacts";
 import FormView from "./form";
+import { saveContacts } from "../models/records";
 
 export default class Contacts extends JetView {
 	config() {
@@ -14,6 +15,7 @@ export default class Contacts extends JetView {
 					rows: [
 						{
 							view: "list",
+							save: saveContacts,
 							localId: "contactsList",
 							scrollX: false,
 							select: true,
@@ -60,7 +62,6 @@ export default class Contacts extends JetView {
 	init() {
 		const contactsList = this.$$("contactsList");
 		contactsList.parse(contacts);
-
 		this.on(contactsList, "onSelectChange", (id) => {
 			if (!id[0]) {
 				this.setParam("id", null, true);
@@ -71,14 +72,14 @@ export default class Contacts extends JetView {
 			}
 		});
 
-		const firstId = webix.storage.local.get("selectedId") || contacts.getFirstId();
+		contacts.attachEvent("onAfterLoad", () => {
+			const firstId = contacts.getFirstId()
+			// || webix.storage.local.get("selectedId");
+			if (firstId)
+				contactsList.select(firstId);
+		});
 
-		if (firstId) {
-			contactsList.select(firstId);
-		}
-
-		this.on(contacts.data, "onStoreUpdated", (id, obj, mode) => {
-
+		this.on(contacts, "onStoreUpdated", (id, obj, mode) => {
 			if (mode === "add") {
 				contactsList.select(id);
 			} else if (mode === "delete") {
