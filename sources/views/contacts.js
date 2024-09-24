@@ -28,7 +28,7 @@ export default class Contacts extends JetView {
 							css: "webix_shadow_medium app_start",
 
 							onClick: {
-								removeBtn: (ev,id) => this.removeContact(ev,id),
+								removeBtn: (ev,id) => this.removeContact(id),
 							}
 						},
 						{
@@ -67,15 +67,16 @@ export default class Contacts extends JetView {
 		});
 	}
 
-	removeContact(ev,id) {
+	removeContact(id) {
 		contacts.waitSave(() => {
 			contacts.remove(id);
-			return false;
+			
 		}).then(() => {
 			const firstId = contacts.getFirstId();
 			if(firstId)
 				this.contactsList.select(firstId);
 		});
+		return false;
 	}
 
 	addNewContact() {
