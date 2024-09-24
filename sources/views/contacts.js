@@ -45,12 +45,11 @@ export default class Contacts extends JetView {
 								const newContact = {
 									"Name": "",
 									"Email": "",
-									"Status": 1,
-									"Country": 1
+									"Status": 4,
+									"Country": 5
 								};
 								contacts.waitSave(() => {
 									contacts.add(newContact);
-
 								});
 							}
 						},
@@ -74,23 +73,23 @@ export default class Contacts extends JetView {
 			}
 		});
 
-		contacts.attachEvent("onAfterLoad", () => {
-			const firstId = contacts.getFirstId();
-			// || webix.storage.local.get("selectedId");
+		contacts.waitData.then(() => {
+			const firstId = webix.storage.local.get("selectedId") || contacts.getFirstId();
 			if (firstId)
 				contactsList.select(firstId);
-		});
+		})
 
 		var contactsdDp = webix.dp(contacts);
 
-		contactsdDp.attachEvent("onAfterSave", function(response){
-			if (response.id) {
-				contactsList.select(response.id);
-			} else {
-				const firstId = contactsList.getFirstId();
-				contactsList.select(firstId);
-			}
+		contactsdDp.attachEvent("onAfterSave", function (response) {
+			contacts.waitData.then(() => {
+				if (response.id) {
+					contactsList.select(response.id);
+				} else {
+					const firstId = contactsList.getFirstId();
+					contactsList.select(firstId);
+				}
+			});
 		});
-	
 	}
 }
