@@ -1,12 +1,10 @@
 import { countries } from "../models/countries";
-import { saveCountries } from "../models/records";
 import BaseTable from "./baseTable";
 
 export default class CountriesView extends BaseTable {
   constructor(app) {
     super(app, {
       collection: countries,
-      save: saveCountries,
       columns: [
         {
           id: "Name",

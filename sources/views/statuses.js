@@ -1,4 +1,3 @@
-import { saveStatuses } from "../models/records";
 import { statuses } from "../models/statuses";
 import BaseTable from "./baseTable";
 
@@ -6,7 +5,6 @@ export default class StatusesView extends BaseTable {
     constructor(app) {
         super(app, {
             collection: statuses,
-            save: saveStatuses,
             columns: [
                 {
                     id: "Name",

@@ -12,7 +12,6 @@ export default class BaseTable extends JetView {
             rows: [
                 {
                     view: "datatable",
-                    save: this.grid_config.save,
                     localId: "table",
                     height: 500,
                     columns: this.grid_config.columns,
