@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { JetView } from "webix-jet";
 import { contacts } from "../models/contacts";
 import FormView from "./form";
@@ -27,16 +28,7 @@ export default class Contacts extends JetView {
 							css: "webix_shadow_medium app_start",
 
 							onClick: {
-								removeBtn: function (ev, id) {
-									contacts.waitSave(() => {
-										contacts.remove(id);
-										return false;
-									}).then(() => {
-										const firstId = contacts.getFirstId();
-										this.select(firstId)
-									})
-
-								},
+								removeBtn: (ev,id) => this.removeContact(ev,id),
 							}
 						},
 						{
@@ -44,21 +36,7 @@ export default class Contacts extends JetView {
 							value: _("Add new contact"),
 							css: "webix_primary",
 							inputWidth: 250,
-							click: () => {
-
-								const newContact = {
-									"Name": "",
-									"Email": "",
-									"Status": 4,
-									"Country": 5
-								};
-
-								contacts.waitSave(() => {
-									contacts.add(newContact);
-								}).then((data) => {
-									this.contactsList.select(data.id)
-								});
-							}
+							click: () => this.addNewContact()
 						},
 					]
 				},
@@ -86,6 +64,32 @@ export default class Contacts extends JetView {
 			const firstId = webix.storage.local.get("selectedId") || contacts.getFirstId();
 			if (firstId)
 				this.contactsList.select(firstId);
-		})
+		});
+	}
+
+	removeContact(ev,id) {
+		contacts.waitSave(() => {
+			contacts.remove(id);
+			return false;
+		}).then(() => {
+			const firstId = contacts.getFirstId();
+			if(firstId)
+				this.contactsList.select(firstId);
+		});
+	}
+
+	addNewContact() {
+		const newContact = {
+			"Name": "",
+			"Email": "",
+			"Status": 4,
+			"Country": 5
+		};
+
+		contacts.waitSave(() => {
+			contacts.add(newContact);
+		}).then((data) => {
+			this.contactsList.select(data.id);
+		});
 	}
 }
