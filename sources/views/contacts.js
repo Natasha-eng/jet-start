@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { JetView } from "webix-jet";
 import { contacts } from "../models/contacts";
 import FormView from "./form";
@@ -20,17 +21,14 @@ export default class Contacts extends JetView {
 							template: function (obj) {
 
 								return (
-									"<div class='space'> <div>" + obj.Name + "  " + obj.Email + "</div> " +
-									"<span class='removeBtn webix_icon wxi-trash'></span></div>"
+									`<div class='space'> <div>${obj.Name || ""}  ${obj.Email || ""}  </div> 
+									<span class='removeBtn webix_icon wxi-trash'></span></div>`
 								);
 							},
 							css: "webix_shadow_medium app_start",
 
 							onClick: {
-								removeBtn: function (ev, id) {
-									contacts.remove(id);
-									return false;
-								},
+								removeBtn: (ev,id) => this.removeContact(id),
 							}
 						},
 						{
@@ -38,17 +36,7 @@ export default class Contacts extends JetView {
 							value: _("Add new contact"),
 							css: "webix_primary",
 							inputWidth: 250,
-							click: () => {
-
-								const newContact = {
-									"Name": "",
-									"Email": "",
-									"Status": 1,
-									"Country": 1
-								};
-
-								contacts.add(newContact);
-							}
+							click: () => this.addNewContact()
 						},
 					]
 				},
@@ -58,10 +46,11 @@ export default class Contacts extends JetView {
 	}
 
 	init() {
-		const contactsList = this.$$("contactsList");
-		contactsList.parse(contacts);
+		this.contactsList = this.$$("contactsList");
 
-		this.on(contactsList, "onSelectChange", (id) => {
+		this.contactsList.parse(contacts);
+
+		this.on(this.contactsList, "onSelectChange", (id) => {
 			if (!id[0]) {
 				this.setParam("id", null, true);
 				webix.storage.local.remove("selectedId");
@@ -71,20 +60,37 @@ export default class Contacts extends JetView {
 			}
 		});
 
-		const firstId = webix.storage.local.get("selectedId") || contacts.getFirstId();
+		contacts.waitData.then(() => {
+			const firstId = webix.storage.local.get("selectedId") || contacts.getFirstId();
+			if (firstId)
+				this.contactsList.select(firstId);
+		});
+	}
 
-		if (firstId) {
-			contactsList.select(firstId);
-		}
+	removeContact(id) {
+		contacts.waitSave(() => {
+			contacts.remove(id);
+			
+		}).then(() => {
+			const firstId = contacts.getFirstId();
+			if(firstId)
+				this.contactsList.select(firstId);
+		});
+		return false;
+	}
 
-		this.on(contacts.data, "onStoreUpdated", (id, obj, mode) => {
+	addNewContact() {
+		const newContact = {
+			"Name": "",
+			"Email": "",
+			"Status": 4,
+			"Country": 5
+		};
 
-			if (mode === "add") {
-				contactsList.select(id);
-			} else if (mode === "delete") {
-				const firstId = contactsList.getFirstId();
-				contactsList.select(firstId);
-			}
+		contacts.waitSave(() => {
+			contacts.add(newContact);
+		}).then((data) => {
+			this.contactsList.select(data.id);
 		});
 	}
 }
